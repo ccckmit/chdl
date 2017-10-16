@@ -1,4 +1,8 @@
 // ============= Chapter 1 ==================
+void nand(BIT a, BIT b, BIT *o) {
+    *o = !(a && b);
+}
+
 void not(BIT i, BIT *o) {
     nand(i, i, o);
 }
@@ -26,11 +30,12 @@ void xor(BIT a, BIT b, BIT *o) {
 }
 
 void mux(BIT a, BIT b, BIT s, BIT *o) {
-    BIT sb, asb, bs;
-    not(s, &sb);
-    and(a, sb, &asb);
-    and(b, s, &bs);
-    or(asb, bs, o);
+    BIT ns, nsa, sb;
+    not(s, &ns);
+    and(a, ns, &nsa);
+    and(b, s, &sb);
+    or(nsa, sb, o);
+//    printf("    mux:a=%d b=%d s=%d o=%d\n", a, b, s, *o);
 }
 
 void dmux(BIT in, BIT s, BIT *a, BIT *b) {
@@ -135,18 +140,18 @@ void mux8way16(BIT a[16], BIT b[16], BIT c[16], BIT d[16],
 
 void dmux4way(BIT in, BIT sel[2], BIT *a, BIT *b, BIT *c, BIT *d) {
     BIT iab, icd;
-    dmux(in, sel[0], &iab, &icd);
-    dmux(iab, sel[1], a, b);
-    dmux(icd, sel[1], c, d);
+    dmux(in, sel[1], &iab, &icd);
+    dmux(iab, sel[0], a, b);
+    dmux(icd, sel[0], c, d);
 }
 
 void dmux8way(BIT in, BIT sel[3], 
               BIT *a, BIT *b, BIT *c, BIT *d,
               BIT *e, BIT *f, BIT *g, BIT *h) {
     BIT iad, ieh;
-    dmux(in, sel[0], &iad, &ieh);
-    dmux4way(iad, &sel[1], a, b, c, d);
-    dmux4way(ieh, &sel[1], e, f, g, h);
+    dmux(in, sel[2], &iad, &ieh);
+    dmux4way(iad, &sel[0], a, b, c, d);
+    dmux4way(ieh, &sel[0], e, f, g, h);
 }
 
 void or8way(BIT in[8], BIT *out) {

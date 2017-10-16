@@ -1,38 +1,50 @@
-void nand(BIT a, BIT b, BIT *o) {
-    *o = !(a && b);
-}
-
-int timer = 0;
-
-bool posEdge() {
-    return (timer%10 == 0);
-}
-
-void dff(BIT *reg, BIT in, BIT *out) {
-    if (posEdge()) *reg = in;
-    *out = *reg;
-}
-
 #define W 16
 #define K 1024
-#define KW (K*W)
-#define REGS_MAX (64*KW)
+// #define KW (K*W)
+#define REGS_MAX (64*K)
 
-BIT regTable[REGS_MAX];
-BIT *A, *D, *PC, *MEMORY, *RAM16K, *SCREEN, *KEYBOARD, *ROM32K;
+WORD regTable[REGS_MAX];
+WORD *A, *D, *PC, *MEMORY, *RAM16K, *SCREEN, *KEYBOARD, *ROM32K;
 
 void init() {
     A = &regTable[0];
-    D = &A[W];
-    PC= &D[W];
+    D = &A[1];
+    PC= &D[1];
     
-    MEMORY = &PC[W];
+    MEMORY = &PC[1];
     RAM16K = MEMORY;
-    SCREEN = &MEMORY[16*KW];
-    KEYBOARD = &SCREEN[8*KW];
+    SCREEN = &MEMORY[16*K];
+    KEYBOARD = &SCREEN[8*K];
     
-    ROM32K = &KEYBOARD[W];
+    ROM32K = &KEYBOARD[1];
 }
+
+#define AOPS 18
+typedef struct {
+    BIT zx, nx, zy, ny, f, no;
+    char *op;
+} AOP;
+
+AOP aop[AOPS] = {
+    {1,0,1,0,1,0, "0"}, //  
+    {1,1,1,1,1,1, "1"}, //  1
+    {1,1,1,0,1,0, "-1"}, // -1
+    {0,0,1,1,0,0, "x"}, //  x
+    {1,1,0,0,0,0, "y"}, //  y
+    {0,0,1,1,0,1, "!x"}, // !x
+    {1,1,0,0,0,1, "!y"}, // !y
+    {0,0,1,1,1,1, "-x"}, // -x
+    {1,1,0,0,1,1, "-y"}, // -y
+    {0,1,1,1,1,1, "x+1"}, // x+1
+    {1,1,0,1,1,1, "y+1"}, // y+1
+    {0,0,1,1,1,0, "x-1"}, // x-1
+    {1,1,0,0,1,0, "y-1"}, // y-1
+    {0,0,0,0,1,0, "x+y"}, // x+y
+    {0,1,0,0,1,1, "x-y"}, // x-y
+    {0,0,0,1,1,1, "y-x"}, // y-x
+    {0,0,0,0,0,0, "x&y"}, // x&y
+    {0,1,0,1,0,1, "x|y"}, // x|y    
+};
 
 #include "chapter1.c"
 #include "chapter2.c"
