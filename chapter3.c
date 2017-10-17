@@ -72,14 +72,14 @@ void ram512(WORD r[512], BIT in[16], BIT load, BIT address[9], BIT out[16]) {
     BIT e[8], ld[8];
     BIT o[8][W];
     dmux8way(1, &address[6], &e[0], &e[1], &e[2], &e[3], &e[4], &e[5], &e[6], &e[7]);
-    and(load, e[0], &ld[0]); ram8(&r[0*64], in, ld[0], address, o[0]);
-    and(load, e[1], &ld[1]); ram8(&r[1*64], in, ld[1], address, o[1]);
-    and(load, e[2], &ld[2]); ram8(&r[2*64], in, ld[2], address, o[2]);
-    and(load, e[3], &ld[3]); ram8(&r[3*64], in, ld[3], address, o[3]);
-    and(load, e[4], &ld[4]); ram8(&r[4*64], in, ld[4], address, o[4]);
-    and(load, e[5], &ld[5]); ram8(&r[5*64], in, ld[5], address, o[5]);
-    and(load, e[6], &ld[6]); ram8(&r[6*64], in, ld[6], address, o[6]);
-    and(load, e[7], &ld[7]); ram8(&r[7*64], in, ld[7], address, o[7]);
+    and(load, e[0], &ld[0]); ram64(&r[0*64], in, ld[0], address, o[0]);
+    and(load, e[1], &ld[1]); ram64(&r[1*64], in, ld[1], address, o[1]);
+    and(load, e[2], &ld[2]); ram64(&r[2*64], in, ld[2], address, o[2]);
+    and(load, e[3], &ld[3]); ram64(&r[3*64], in, ld[3], address, o[3]);
+    and(load, e[4], &ld[4]); ram64(&r[4*64], in, ld[4], address, o[4]);
+    and(load, e[5], &ld[5]); ram64(&r[5*64], in, ld[5], address, o[5]);
+    and(load, e[6], &ld[6]); ram64(&r[6*64], in, ld[6], address, o[6]);
+    and(load, e[7], &ld[7]); ram64(&r[7*64], in, ld[7], address, o[7]);
     mux8way16(o[0], o[1], o[2], o[3], o[4], o[5], o[6], o[7], &address[6], out);
 }
 
@@ -87,14 +87,14 @@ void ram4K(WORD r[4*K], BIT in[16], BIT load, BIT address[12], BIT out[16]) {
     BIT e[8], ld[8];
     BIT o[8][W];
     dmux8way(1, &address[9], &e[0], &e[1], &e[2], &e[3], &e[4], &e[5], &e[6], &e[7]);
-    and(load, e[0], &ld[0]); ram8(&r[0*512], in, ld[0], address, o[0]);
-    and(load, e[1], &ld[1]); ram8(&r[1*512], in, ld[1], address, o[1]);
-    and(load, e[2], &ld[2]); ram8(&r[2*512], in, ld[2], address, o[2]);
-    and(load, e[3], &ld[3]); ram8(&r[3*512], in, ld[3], address, o[3]);
-    and(load, e[4], &ld[4]); ram8(&r[4*512], in, ld[4], address, o[4]);
-    and(load, e[5], &ld[5]); ram8(&r[5*512], in, ld[5], address, o[5]);
-    and(load, e[6], &ld[6]); ram8(&r[6*512], in, ld[6], address, o[6]);
-    and(load, e[7], &ld[7]); ram8(&r[7*512], in, ld[7], address, o[7]);
+    and(load, e[0], &ld[0]); ram512(&r[0*512], in, ld[0], address, o[0]);
+    and(load, e[1], &ld[1]); ram512(&r[1*512], in, ld[1], address, o[1]);
+    and(load, e[2], &ld[2]); ram512(&r[2*512], in, ld[2], address, o[2]);
+    and(load, e[3], &ld[3]); ram512(&r[3*512], in, ld[3], address, o[3]);
+    and(load, e[4], &ld[4]); ram512(&r[4*512], in, ld[4], address, o[4]);
+    and(load, e[5], &ld[5]); ram512(&r[5*512], in, ld[5], address, o[5]);
+    and(load, e[6], &ld[6]); ram512(&r[6*512], in, ld[6], address, o[6]);
+    and(load, e[7], &ld[7]); ram512(&r[7*512], in, ld[7], address, o[7]);
     mux8way16(o[0], o[1], o[2], o[3], o[4], o[5], o[6], o[7], &address[9], out);
 }
 
@@ -102,10 +102,10 @@ void ram16K(WORD r[16*K], BIT in[16], BIT load, BIT address[14], BIT out[16]) {
     BIT e[4], ld[4];
     BIT o[4][W];
     dmux4way(1, &address[12], &e[0], &e[1], &e[2], &e[3]);
-    and(load, e[0], &ld[0]); ram8(&r[0*4*K], in, ld[0], address, o[0]);
-    and(load, e[1], &ld[1]); ram8(&r[1*4*K], in, ld[1], address, o[1]);
-    and(load, e[2], &ld[2]); ram8(&r[2*4*K], in, ld[2], address, o[2]);
-    and(load, e[3], &ld[3]); ram8(&r[3*4*K], in, ld[3], address, o[3]);
+    and(load, e[0], &ld[0]); ram4K(&r[0*4*K], in, ld[0], address, o[0]);
+    and(load, e[1], &ld[1]); ram4K(&r[1*4*K], in, ld[1], address, o[1]);
+    and(load, e[2], &ld[2]); ram4K(&r[2*4*K], in, ld[2], address, o[2]);
+    and(load, e[3], &ld[3]); ram4K(&r[3*4*K], in, ld[3], address, o[3]);
     mux4way16(o[0], o[1], o[2], o[3], &address[12], out);
 }
 
@@ -113,14 +113,14 @@ void ram32K(WORD r[32*K], BIT in[16], BIT load, BIT address[15], BIT out[16]) {
     BIT e[8], ld[8];
     BIT o[8][W];
     dmux8way(1, &address[12], &e[0], &e[1], &e[2], &e[3], &e[4], &e[5], &e[6], &e[7]);
-    and(load, e[0], &ld[0]); ram8(&r[0], in, ld[0], address, o[0]);
-    and(load, e[1], &ld[1]); ram8(&r[1], in, ld[1], address, o[1]);
-    and(load, e[2], &ld[2]); ram8(&r[2], in, ld[2], address, o[2]);
-    and(load, e[3], &ld[3]); ram8(&r[3], in, ld[3], address, o[3]);
-    and(load, e[4], &ld[4]); ram8(&r[4], in, ld[4], address, o[4]);
-    and(load, e[5], &ld[5]); ram8(&r[5], in, ld[5], address, o[5]);
-    and(load, e[6], &ld[6]); ram8(&r[6], in, ld[6], address, o[6]);
-    and(load, e[7], &ld[7]); ram8(&r[7], in, ld[7], address, o[7]);
+    and(load, e[0], &ld[0]); ram4K(&r[0*4*K], in, ld[0], address, o[0]);
+    and(load, e[1], &ld[1]); ram4K(&r[1*4*K], in, ld[1], address, o[1]);
+    and(load, e[2], &ld[2]); ram4K(&r[2*4*K], in, ld[2], address, o[2]);
+    and(load, e[3], &ld[3]); ram4K(&r[3*4*K], in, ld[3], address, o[3]);
+    and(load, e[4], &ld[4]); ram4K(&r[4*4*K], in, ld[4], address, o[4]);
+    and(load, e[5], &ld[5]); ram4K(&r[5*4*K], in, ld[5], address, o[5]);
+    and(load, e[6], &ld[6]); ram4K(&r[6*4*K], in, ld[6], address, o[6]);
+    and(load, e[7], &ld[7]); ram4K(&r[7*4*K], in, ld[7], address, o[7]);
     mux8way16(o[0], o[1], o[2], o[3], o[4], o[5], o[6], o[7], &address[12], out);
 }
 
@@ -149,5 +149,5 @@ void pc(WORD r[1], BIT in[16], BIT load, BIT inc, BIT reset, BIT out[16]) {
 //    printBits("   => if3", if3, 16);
     reg(r, if3, loadIncReset, out);
 //    and16(o, o, out);
-    printBits("   => out", out, 16);
+//    printBits("   => out", out, 16);
 }

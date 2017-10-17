@@ -190,6 +190,29 @@ void testRam8() {
     }
 }
 
+void testRam16K() {
+    printf("=========== testRam16K() =============\n");
+    WORD in[]   = {0,1,2,3,4,5,6,7,8,9};
+    WORD addr[] = {11,12,13,0,7,13,12,11,0,6,6}; // {0,1,2,3,4,5,6,7,0,1,2}; // {1,4,7,1,4,7,1,4,7,1};
+    WORD r[16*K]   = {90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105};
+    BIT load[]  = {0,1,1,1,1,0,0,1,1,0}; // {0,0,0,0,0,0,0,0,0,0}; 
+    int i = 0;
+    dumpRam(r, 15);
+    for (timer = 5; timer <= 50; timer+=5, i++) {
+        BIT rin[W], rout[W], raddr[14];
+        char rinStr[W+1], raddrStr[15];
+        int2bits(in[i], rin, W);
+        int2bits(addr[i], raddr, 14);
+//        bits2str(raddr, raddrStr, 3);
+//        printf("  raddrStr=%s\n", raddrStr);
+        ram16K(r, rin, load[i], raddr, rout);
+        WORD routInt = bits2int(rout, W);
+        WORD rinInt  = bits2int(rin, W);
+        printf("%02d:rin=%2d load=%d addr=%d rout=%d\n", timer, rinInt, load[i], addr[i], routInt);
+        dumpRam(r, 15);
+    }
+}
+
 void testRom32K() {
     printf("=========== testRom32K() =============\n");
     int size = loadRam(ROM, "hack/add.hack");
@@ -222,16 +245,20 @@ void testPC() {
     }   
 }
 
-void testComputer() {
+void testComputer(char *binFile) {
+    RAM[0] = 13; RAM[1] = 9; RAM[2] = 0x8FF;
     printf("=========== testComputer() =============\n");
-    int size = loadRam(ROM, "hack/add.hack");
+    int size = loadRam(ROM, binFile);
     dumpRam(ROM, size);
-    BIT reset[] ={0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    BIT resets[] ={1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     int i = 0;
-    for (timer=5; timer < 100; timer +=5, i++) {
-        computer(reset[i]);
-        printf("%d:PC=%04d A=%04d D=%04d reset=%d\n", timer, *PC, *A, *D, reset[i]);
+    for (timer=5; ; timer +=5, i++) { // timer < 90
+        BIT reset = (i < (sizeof(resets)/sizeof(resets[0]))) ? resets[i] : 0;
+        computer(reset);
+        printf("%d:PC=%04d A=%04d D=%04d reset=%d\n", timer, *PC, *A, *D, reset);
+        if (*PC > size || timer > 500) break;
     }
+    dumpRam(RAM, 10);
 }
 
 void testChapter1() {
@@ -252,18 +279,21 @@ void testChapter3() {
     testBit();
     testRegister();
     testRam8();
+    testRam16K();
     testRom32K();
     testPC();
 }
 
 void testChapter5() {
-    testComputer();
+//    testComputer("hack/add.hack");
+    testComputer("hack/max.hack");
+//    testComputer("hack/rect.hack");
 }
 
 void test() {
-    testChapter1();
-    testChapter2();
-    testChapter3();
+//    testChapter1();
+//    testChapter2();
+//    testChapter3();
     testChapter5();
 }
 
