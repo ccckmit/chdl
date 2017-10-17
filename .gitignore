@@ -5,6 +5,9 @@
 logs
 *.log
 
+# out
+*.out
+
 # exe
 *.exe
 
