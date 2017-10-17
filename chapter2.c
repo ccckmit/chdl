@@ -34,7 +34,7 @@ void add16(BIT a[16], BIT b[16], BIT o[16]) {
 }
 
 void inc16(BIT in[16], BIT out[16]) {
-    BIT one[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
+    BIT one[16] = {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     add16(in, one, out);
 }
 

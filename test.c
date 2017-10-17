@@ -167,13 +167,6 @@ void testRegister() {
     }
 }
 
-void dumpRam(WORD r[], int size) {
-    printf("============ dumpRam =============\n");
-    for (int i=0; i<size; i++) {
-        printf("ram[%d] = %04x %d\n", i, r[i], r[i]);
-    }
-}
-
 void testRam8() {
     printf("=========== testRam8() =============\n");
     WORD in[]   = {0,1,2,3,4,5,6,7,8,9};
@@ -197,6 +190,50 @@ void testRam8() {
     }
 }
 
+void testRom32K() {
+    printf("=========== testRom32K() =============\n");
+    int size = loadRam(ROM, "hack/add.hack");
+    dumpRam(ROM, size);
+    printf("size=%d\n", size);
+    int i = 0;
+    for (timer = 5; timer < 40; timer+=5, i++) {
+        BIT address[15], rout[W];
+        int2bits(i, address, 15);
+        rom32K(ROM, address, rout);
+        WORD routInt = bits2int(rout, W);
+        printf("%02d:address=%d rout=%04hx %hd\n", timer, i, routInt, routInt);
+    }
+}
+
+void testPC() {
+    printf("=========== testPC() =============\n");
+    BIT reset[] ={0,1,1,1,0,0,0,0,0,0,0,0,0,0, 0, 0, 0, 0, 0, 0, 0};
+    BIT inc[]   ={1,1,1,1,1,1,1,1,1,1,1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+    BIT load[]  ={0,0,0,0,0,0,0,0,0,0,0, 1, 1, 1, 1, 0, 0, 0, 0, 0};
+    WORD inInt[]={0,0,0,0,0,0,0,0,0,0,0,37,24,15,33,92,74,20,13,19};
+    int i=0;
+    *PC = 100;
+    for (timer = 5; timer < 100; timer+=5, i++) {
+        BIT in[16], out[16];
+        int2bits(inInt[i], in, 16);
+        pc(PC, in, load[i], inc[i], reset[i], out);
+        int outInt = bits2int(out, 16);
+        printf("%d:PC=%04d reset=%d inc=%d load=%d in=%04hx out=%d\n", timer, *PC, reset[i], inc[i], load[i], inInt[i], outInt);
+    }   
+}
+
+void testComputer() {
+    printf("=========== testComputer() =============\n");
+    int size = loadRam(ROM, "hack/add.hack");
+    dumpRam(ROM, size);
+    BIT reset[] ={0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    int i = 0;
+    for (timer=5; timer < 100; timer +=5, i++) {
+        computer(reset[i]);
+        printf("%d:PC=%04d A=%04d D=%04d reset=%d\n", timer, *PC, *A, *D, reset[i]);
+    }
+}
+
 void testChapter1() {
     testGate1();
     testGate2();
@@ -215,12 +252,19 @@ void testChapter3() {
     testBit();
     testRegister();
     testRam8();
+    testRom32K();
+    testPC();
+}
+
+void testChapter5() {
+    testComputer();
 }
 
 void test() {
     testChapter1();
     testChapter2();
     testChapter3();
+    testChapter5();
 }
 
 int main() {

@@ -1,22 +1,22 @@
 #define W 16
 #define K 1024
 // #define KW (K*W)
-#define REGS_MAX (64*K)
+#define MMAX (64*K)
 
-WORD regTable[REGS_MAX];
-WORD *A, *D, *PC, *MEMORY, *RAM16K, *SCREEN, *KEYBOARD, *ROM32K;
+WORD M[MMAX];
+WORD *A, *D, *PC, *MEMORY, *RAM, *SCREEN, *KEYBOARD, *ROM;
 
 void init() {
-    A = &regTable[0];
+    A = &M[0];
     D = &A[1];
     PC= &D[1];
     
     MEMORY = &PC[1];
-    RAM16K = MEMORY;
+    RAM = MEMORY;
     SCREEN = &MEMORY[16*K];
     KEYBOARD = &SCREEN[8*K];
     
-    ROM32K = &KEYBOARD[1];
+    ROM = &KEYBOARD[1];
 }
 
 #define AOPS 18

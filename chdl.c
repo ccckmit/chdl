@@ -43,3 +43,24 @@ void printBits(char *msg, BIT *bits, int len) {
     bits2str(bits, str, len);
     printf("%s:%s\n", msg, str);
 }
+
+void dumpRam(WORD r[], int size) {
+    printf("============ dumpRam =============\n");
+    for (int i=0; i<size; i++) {
+        printf("ram[%d] = %04hx %hd\n", i, r[i], r[i]);
+    }
+}
+
+int loadRam(WORD r[], char *file) {
+    FILE *fp = fopen(file, "r");
+    char line[100];
+    int i=0;
+    while (fgets(line, 100, fp) != NULL) {
+        int len = strlen(line);
+        if (line[len-1] == '\n') line[len-1] = '\0';
+        printf("%s\n", line);
+        r[i++] = strtol(line, (char **)NULL, 2);
+    }
+    fclose(fp);
+    return i;
+}
